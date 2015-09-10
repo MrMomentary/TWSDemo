@@ -30,7 +30,7 @@ By: Chris Kemp <ckemp@salesforce.com> and Sandy Jones <sajones@salesforce.com>
         Reid Carlberg <reid.carlberg@salesforce.com>
 */
 
-public with sharing class LeadSwarmRuleSetup {
+public with sharing class LeadSwarmRuleSetup  {
 
     String step1 = null;
     String withRating = null;
