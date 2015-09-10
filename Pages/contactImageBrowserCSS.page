@@ -1,0 +1,298 @@
+<apex:page showHeader="false" 
+           standardStylesheets="false" 
+           sidebar="false"
+           cache="true" 
+           id="ImageBrowserCSS">
+
+
+<style>
+/* -------------- */
+/* a few custom and a few styles plucked from Common.css */
+
+.resultsTable{
+width:100%;
+}
+
+.ImageBrowserHeader {
+		color:#FFF;
+		font-family:Verdana;
+		padding-left:40px;
+		font-size:8px;
+		padding-top:5px;
+		background:#638658 url(/img/icon/home32.png) no-repeat 1px 6px;
+		padding-bottom:5px;
+	}
+	
+	.ImageBrowserCaptureIcon {
+		background:#3399CC url(/img/icon/camera24.png) no-repeat 10px center !important;		
+	}
+	
+	.ImageBrowserObjTitle {
+	font-weight:700;
+	font-size:14px!important;
+	}
+	
+
+
+/* --------  Custom Styles -------- */
+ body{
+ -webkit-text-size-adjust: none;
+ white-space:normal;
+ }
+
+ .sectionHead {
+  font-size:1em; 
+  padding: 3px 0px 3px 5px;
+  background-color:#BFBFA3;
+  bgcolor:#BFBFA3;
+  border-bottom: 1px solid white;
+  white-space:normal;
+  
+  
+ }
+  .sectionBody {
+  background-color:#F0F0E9;
+  bgcolor:#F4F4D4;
+  border-top:3px solid #609CAF;
+   width:100%;
+   
+}
+ .pageTitle {
+  font-weight:bold; 
+  font-size:1.1em; 
+  font-family:verdana; 
+  padding-left:10px;
+}
+ .pageSubTitle {
+  font-weight:bold; 
+  font-size:1.3em; 
+  font-family:verdana; 
+  padding-left:10px;
+}
+  .pageHeaderBlock {
+  background-color:lightblue;
+  bgcolor:lightblue;
+  border-bottom:1px solid #609CAF;
+  border-top:1px solid #609CAF;
+}
+
+.thumbnail {
+	margin-top:3px;
+	display:block;
+}
+
+.topAlign{
+	vertical-align:top;
+}
+
+
+/* --------  Salesforce Common.css Styles -------- */
+
+/* General page styles */
+body, td {
+    margin:0px; 
+    color:#333;     
+}
+
+body {
+    background-repeat: repeat-x;
+    background-position: left top;
+    font-size: 75%;
+    font-family: 'Arial', 'Helvetica', sans-serif;
+    background-color: #FFF;
+}
+textarea {
+    font-family: 'Arial', 'Helvetica', sans-serif;
+    font-size: 100%;
+}
+form {
+    margin:0px;
+    padding:0px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Verdana', 'Geneva', sans-serif;
+    font-size: 100%;
+    margin:0px;
+    display:inline;
+}
+select {
+    color:#000;
+}
+a {
+    color:#333;
+}
+
+a:hover {
+    text-decoration:underline;
+}
+
+th {
+    text-align: left;
+    font-weight: bold;
+    white-space: nowrap;
+}
+/* prevent browsers from overwriting the font-size. It should be the same as the select. */
+select option,
+select optgroup {
+    font-size: 100%;
+}
+/* HTML Input Element */
+.htmlInput .controls {
+    padding: 5px;
+    border: 1px solid #000;
+    background-color: #CCC;
+}
+
+.htmlInput .htmlEditor {
+    border: 1px solid #000;
+}
+
+
+/* LookupInputElement */
+.lookupInput {
+    display: inline;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.lookupInput img {
+    margin-right: .25em;
+    background-repeat: no-repeat;
+}
+
+.lookupInput a.readOnly {
+    float: right;
+}
+
+.lookupInput span.readOnly {
+    white-space: normal;
+    display: block;
+}
+
+.lookupInput span.totalSummary {
+    font-weight: bold;
+}
+
+/* buttons */
+.btn, .button, .formulaButton, .btnWhatsNew {
+    font-family: 'Verdana', 'Geneva', sans-serif;
+ /*   background-image:  url("/img/bgButton.gif");*/
+    
+    -webkit-appearance: none;
+-webkit-background-clip: border;
+-webkit-background-composite: source-over;
+-webkit-background-origin: padding;
+-webkit-background-size: auto auto;
+-webkit-border-bottom-left-radius: 3px;
+-webkit-border-bottom-right-radius: 3px;
+-webkit-border-fit: border;
+-webkit-border-horizontal-spacing: 0px;
+-webkit-border-top-left-radius: 3px;
+-webkit-border-top-right-radius: 3px;
+-webkit-border-vertical-spacing: 0px;
+-webkit-box-align: stretch;
+-webkit-box-direction: normal;
+-webkit-box-flex: 0;
+-webkit-box-flex-group: 1;
+-webkit-box-lines: single;
+-webkit-box-ordinal-group: 1;
+-webkit-box-orient: horizontal;
+-webkit-box-pack: start;
+-webkit-box-shadow: none;
+-webkit-box-sizing: content-box;
+-webkit-column-break-after: auto;
+-webkit-column-break-before: auto;
+-webkit-column-break-inside: auto;
+-webkit-column-count: auto;
+-webkit-column-gap: normal;
+-webkit-column-rule-color: white;
+-webkit-column-rule-style: none;
+-webkit-column-rule-width: 0px;
+-webkit-column-width: auto;
+-webkit-dashboard-region: ;
+-webkit-highlight: none;
+-webkit-line-break: normal;
+-webkit-line-clamp: none;
+-webkit-margin-bottom-collapse: collapse;
+-webkit-margin-top-collapse: collapse;
+-webkit-marquee-direction: auto;
+-webkit-marquee-increment: 6px;
+-webkit-marquee-repetition: infinite;
+-webkit-marquee-style: scroll;
+-webkit-nbsp-mode: normal;
+-webkit-rtl-ordering: logical;
+-webkit-text-decorations-in-effect: none;
+-webkit-text-fill-color: white;
+-webkit-text-security: none;
+-webkit-text-stroke-color: white;
+-webkit-text-stroke-width: 0;
+-webkit-user-drag: auto;
+-webkit-user-modify: read-only;
+-webkit-user-select: text;
+alignment-baseline: auto;
+background-attachment: scroll;
+background-color: rgb(19, 90, 159);
+baseline-shift: baseline;
+border-bottom-color: rgb(1, 91, 167);
+border-bottom-style: solid;
+border-bottom-width: 1px;
+border-collapse: separate;
+border-left-color: rgb(1, 91, 167);
+border-left-style: solid;
+border-left-width: 1px;
+border-right-color: rgb(1, 91, 167);
+border-right-style: solid;
+border-right-width: 1px;
+border-top-color: rgb(1, 91, 167);
+border-top-style: solid;
+border-top-width: 1px;
+bottom: auto;
+color: white;
+color-interpolation: srgb;
+color-interpolation-filters: linearrgb;
+display: block;
+font-size: 8px;
+font-style: normal;
+font-variant: normal;
+font-weight: bold;
+height: 18px;
+margin:1em;
+orphans: 2;
+outline-color: white;
+outline-style: none;
+outline-width: 0px;
+padding-bottom: 0px;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 7px;
+position: static;
+right: auto;
+text-align: center;
+text-anchor: start;
+text-decoration: none;
+top: auto;
+vertical-align: baseline;
+white-space: normal;
+widows: 2;
+width: 5em;
+word-wrap: normal;
+
+    
+	
+}
+/* icons */
+.lookupIcon { background-image: url(/img/func_icons/util/lookup20.gif);
+    width:20px;
+    height:20px;
+    background-position: top left;
+}
+
+.lookupIconOn { background-image: url(/img/func_icons/util/lookup20.gif);
+    width:20px;
+    height:20px;
+    background-position: top right;
+}
+
+</style>
+
+</apex:page>

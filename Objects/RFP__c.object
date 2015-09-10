@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <enableActivities>true</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <fields>
+        <fullName>Deadline_Approaching_Warning__c</fullName>
+        <externalId>false</externalId>
+        <formula>Due_Date__c -  Reminder_Days__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Date on which a reminder email is sent out to the owner of this RFP warning them of the approaching deadline.</inlineHelpText>
+        <label>Deadline Approaching Warning</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Due_Date__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Submission deadline for this document.</inlineHelpText>
+        <label>Due Date</label>
+        <required>true</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Existing_Responses__c</fullName>
+        <description>The number of Responses in this document that were selected from already existing Responses.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The number of Responses in this document that were selected from already existing Responses.</inlineHelpText>
+        <label>Existing Responses</label>
+        <summaryFilterItems>
+            <field>Question__c.Original_Response__c</field>
+            <operation>equals</operation>
+            <value>False</value>
+        </summaryFilterItems>
+        <summaryForeignKey>Question__c.RFP__c</summaryForeignKey>
+        <summaryOperation>count</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>New_Responses__c</fullName>
+        <description>The number of Responses that were authored as part of this Document.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The number of Responses that were authored as part of this document.</inlineHelpText>
+        <label>New Responses</label>
+        <summaryFilterItems>
+            <field>Question__c.Original_Response__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </summaryFilterItems>
+        <summaryForeignKey>Question__c.RFP__c</summaryForeignKey>
+        <summaryOperation>count</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Opportunity__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <inlineHelpText>The Opportunity for this document.</inlineHelpText>
+        <label>Opportunity</label>
+        <referenceTo>Opportunity</referenceTo>
+        <relationshipLabel>RFPs/RFIs/RFQs/SOWs</relationshipLabel>
+        <relationshipName>RFPs</relationshipName>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>RFP_URL__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Links to a web site where detailed information about the RFx/SOW document may be found.</inlineHelpText>
+        <label>RFP URL</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>Reminder_Days__c</fullName>
+        <defaultValue>7</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>Sends a reminder notice to the RFP owner this number of days before the RFP deadline.</inlineHelpText>
+        <label>Reminder: Days Prior to Deadline</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Status__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>The state of this document.</inlineHelpText>
+        <label>Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Open</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Review</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>No Bid</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Submitted</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Down Selected</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Eliminated</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Total_Responses__c</fullName>
+        <externalId>false</externalId>
+        <formula>New_Responses__c +  Existing_Responses__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>The total number of responses - both new responses and responses that already exist in RFPForce.</inlineHelpText>
+        <label>Total Responses</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Type__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Type of document which is being prepared.</inlineHelpText>
+        <label>Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>RFI</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>RFP</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>RFQ</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>SOW</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>FAQ</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Untracked Proposal</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Internal Document</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Marketing Document</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <label>RFP</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Status__c</columns>
+        <columns>Due_Date__c</columns>
+        <columns>Existing_Responses__c</columns>
+        <columns>New_Responses__c</columns>
+        <columns>Opportunity__c</columns>
+        <columns>Total_Responses__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <nameField>
+        <label>RFP Name</label>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>RFPs</pluralLabel>
+    <recordTypeTrackHistory>false</recordTypeTrackHistory>
+    <recordTypes>
+        <fullName>Closed_RFP</fullName>
+        <active>true</active>
+        <description>Record type representing a Closed RFP Object.</description>
+        <label>Closed RFP</label>
+        <picklistValues>
+            <picklist>Status__c</picklist>
+            <values>
+                <fullName>Down Selected</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Eliminated</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>No Bid</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Open</fullName>
+                <default>true</default>
+            </values>
+            <values>
+                <fullName>Review</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Submitted</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Type__c</picklist>
+            <values>
+                <fullName>FAQ</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Internal Document</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Marketing Document</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>RFI</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>RFP</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>RFQ</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>SOW</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Untracked Proposal</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <recordTypes>
+        <fullName>Open_RFP</fullName>
+        <active>true</active>
+        <description>Record type representing an Open RFP object.</description>
+        <label>Open RFP</label>
+        <picklistValues>
+            <picklist>Status__c</picklist>
+            <values>
+                <fullName>Down Selected</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Eliminated</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>No Bid</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Open</fullName>
+                <default>true</default>
+            </values>
+            <values>
+                <fullName>Review</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Submitted</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Type__c</picklist>
+            <values>
+                <fullName>FAQ</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Internal Document</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Marketing Document</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>RFI</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>RFP</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>RFQ</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>SOW</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Untracked Proposal</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <searchLayouts>
+        <customTabListAdditionalFields>Due_Date__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Type__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Total_Responses__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Opportunity__c</customTabListAdditionalFields>
+    </searchLayouts>
+    <sharingModel>ReadWrite</sharingModel>
+    <startsWith>Vowel</startsWith>
+    <validationRules>
+        <fullName>Require_Opportunity_for_RFx_Documents</fullName>
+        <active>false</active>
+        <description>Require an Opportunity to be entered for RFIs, RFPs, RFQs, and SOWs.</description>
+        <errorConditionFormula>(ISPICKVAL( Type__c , &apos;RFI&apos;) || ISPICKVAL( Type__c , &apos;RFP&apos;) ||  ISPICKVAL( Type__c , &apos;RFQ&apos;) || ISPICKVAL ( Type__c, &apos;SOW&apos;)) &amp;&amp; (Opportunity__c = null)</errorConditionFormula>
+        <errorDisplayField>Opportunity__c</errorDisplayField>
+        <errorMessage>RFIs, RFPs, RFQs, and SOWs require an Opportunity.</errorMessage>
+    </validationRules>
+    <webLinks>
+        <fullName>QuickLookup</fullName>
+        <availability>online</availability>
+        <description>Opens the QuickLookup tool on this RFP.</description>
+        <displayType>button</displayType>
+        <hasMenubar>false</hasMenubar>
+        <hasScrollbars>false</hasScrollbars>
+        <hasToolbar>false</hasToolbar>
+        <height>620</height>
+        <isResizable>true</isResizable>
+        <linkType>page</linkType>
+        <masterLabel>QuickLookup</masterLabel>
+        <openType>newWindow</openType>
+        <page>RFP_QuickLookupTool</page>
+        <position>topLeft</position>
+        <protected>false</protected>
+        <showsLocation>true</showsLocation>
+        <showsStatus>true</showsStatus>
+        <width>400</width>
+    </webLinks>
+</CustomObject>

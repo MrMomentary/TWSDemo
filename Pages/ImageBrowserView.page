@@ -1,0 +1,42 @@
+<apex:page showHeader="false"  
+           standardStylesheets="false" 
+           sidebar="false" >
+
+<div id="viewImagePanel" style="display:none">
+		  
+	<div class="ImageBrowserHeader ImageBrowserCaptureIcon">
+		<div class="ImageBrowserTitle">
+			Visualforce Mobile Demo <br />
+			<span class="ImageBrowserObjTitle">Image view</span>
+		</div>
+	</div>      
+	
+	<form>
+	    <input type="button" value="Back" class="btn" onclick="return toggleImage(null);"/>
+	    <div id="imgPlace"> </div>
+	</form> 
+	
+	<script language="javascript">    
+    
+		function toggleImage(img){
+			
+			list = document.getElementById('imageListPanel');
+			image = document.getElementById('viewImagePanel');
+			div = document.getElementById('imgPlace');
+			
+			if((list.style.display == 'none') && (img == null) ){
+				list.style.display = 'block';
+				image.style.display = 'none';
+			} else {
+				list.style.display = 'none';
+				image.style.display = 'block';
+				div.innerHTML = '<img src="' + img + '" width="100%" />';
+				window.location.href = '#';
+			}	
+			return false;			
+		}
+	</script>
+	    
+</div>
+
+</apex:page>

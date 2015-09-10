@@ -1,0 +1,55 @@
+<apex:page controller="imageBrowserController"  
+           showHeader="false"  
+           standardStylesheets="false" 
+           sidebar="false" >
+
+<apex:form >  	  
+    
+        <apex:panelgrid columns="1" frame="border" styleClass="sectionBody" width="100%" headerClass="sectionHead">
+
+           <!--  <apex:facet name="header">Search for Records with Images</apex:facet>  -->
+
+            <apex:panelGrid columns="2">
+
+				<apex:outputLabel value="Search " for="searchTerm"/>	
+	            <apex:inputText value="{!recordName}" id="searchTerm"/>
+
+	            <apex:outputLabel value="in " for="objectNameSelection" />	
+	            <apex:selectList value="{!objectName}" size="1" id="objectNameSelection" onchange="toggleShowFilter();">
+	                <apex:selectOption itemValue="Account" itemLabel="Account" />
+	                <apex:selectOption itemValue="Contact" itemLabel="Contact" />
+	            </apex:selectList>
+	            
+	            <apex:outputLabel value="show its " for="showSelection"/>	
+	            <apex:selectList value="{!showFilter}" size="1" id="showSelection">
+	                <apex:selectOption itemValue="Contact" itemLabel="Contacts" />
+	                <apex:selectOption itemValue="SiteVisit" itemLabel="Site visits" />
+	            </apex:selectList>
+	            
+            </apex:panelGrid>	
+
+               <apex:commandButton action="{!search}" value="Go!" styleClass="btn"/>
+
+        </apex:panelgrid>
+        <script>
+        
+        	var selectFilterId = '{!$Component.showSelection}';
+        	var selectTypeId = '{!$Component.objectNameSelection}';
+        	
+        	function toggleShowFilter(){
+				show = document.getElementById(selectFilterId);
+				type = document.getElementById(selectTypeId);
+				for(i=0; i<type.length; i++){
+					if (type.options[i].selected && type.options[i].value == 'Contact'){	
+						show.disabled = true;
+						break;
+					}
+					if (type.options[i].selected && type.options[i].value == 'Account'){
+						show.disabled = false;
+						break;
+					}
+				}		
+			}	        
+        </script>	    
+    </apex:form>
+    </apex:page>

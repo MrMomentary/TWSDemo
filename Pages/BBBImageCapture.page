@@ -1,0 +1,35 @@
+<apex:page title="Image Capture" 
+           controller="BBBImageCaptureController" 
+           showHeader="false" 
+           standardStylesheets="false" 
+           sidebar="false" 
+           id="BBBImageCapture">
+             
+	<apex:include pageName="ImageBrowserStyles" />
+	
+
+	<div class="header ImageBrowserCaptureIcon">
+		<div class="title ">
+			Visualforce Mobile Demo <br/>
+			<span class="objTitle">Add Image</span>
+		</div>
+	</div>
+	 
+	<!-- Form for grabbing image from device -->
+	<apex:form id="imageUploadForm" accept="image/png, image/jpg, image/gif" enctype="multipart/form-data">
+		<apex:outputPanel styleClass="errorMessage" rendered="{!uploadError}">{!errorMessage}</apex:outputPanel> 
+		<table>
+			<tr>
+				<td>Image File: </td>
+				<td><apex:inputFile value="{!newAttachment.body}" filename="{!newAttachment.name}" id="imageFile" required="true" /></td>
+				
+			</tr>
+		</table>	
+		<table>
+			<tr>
+				<td><apex:commandButton action="{!save}" value="Save" styleClass="greyBtn" styleClass="greyBtn" /></td>
+				<td><a href="{!backUrl}" class="greyBtn">back</a></td>
+			</tr>
+		</table>
+	</apex:form>
+</apex:page>

@@ -1,0 +1,69 @@
+<apex:page title="Visualforce Mobile Demo: Image Browser" 
+           controller="imageBrowserController"  
+           showHeader="false"  
+           standardStylesheets="false" 
+           sidebar="false" 
+           id="ImageBrowserSearch">
+
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+<apex:include pageName="contactImageBrowserCSS"/>
+
+	<div class="ImageBrowserHeader ImageBrowserCaptureIcon">
+		<div class="ImageBrowserTitle">
+			Visualforce Mobile Demo <br />
+			<span class="ImageBrowserObjTitle">Account Search Results</span>
+		</div>
+	</div>
+
+    
+
+    <br />
+
+
+	<apex:include pageName="{!$Page.ImageBrowserSearchDialog}" />
+
+	<apex:form >   
+		    
+	    <apex:panelgrid columns="1" frame="border" styleClass="resultsTable" headerClass="sectionHead" styleClass="resultsTable">
+	
+	        <apex:facet name="header">Search Results</apex:facet>
+	        
+	        <apex:repeat value="{!searchResult}" var="account">
+		
+				<div style="font-weight:bold; background-color:#D1E8EF; padding:2px; margin-top:5px;">
+					<table class="resultsTable">
+					<tr><td class="resultsTable">Account: {!account.Name}</td>
+					
+					<td><input type="button" class="btn" value="Add Site Visit" style="width:10em;" onclick="javascript:window.location.href='{!$Page.AddSiteVisit}?id={!account.Id}&q={!recordName}'"/></td></tr>
+					
+					</table>
+				    
+				</div>
+
+
+			   <apex:dataTable value="{!account.Site_Visits__r}" var="sv" columns="2" cellpadding="5" columnswidth="150px" rules="rows" styleClass="sectionBody" styleClass="sectionBody" rendered="{!account.Site_Visits__r.size > 0}"> 
+			
+			       <apex:column >
+			           <apex:facet name="header">Name</apex:facet>
+			<!-- 
+			           <a href="{!$Page.ImageBrowserSiteVisitGallery}?siteVisitId={!sv.Id}">{!sv.Name}</a>
+			      -->
+			      
+			      		<apex:commandLink value="{!sv.Name}" action="{!viewSiteVisitThumbs}">   
+							<apex:param name="svId" value="{!sv.Id}" assignTo="{!recordId}" /> 
+			           </apex:commandLink>
+			            
+			       </apex:column>
+			       <apex:column >
+			           <apex:facet name="header">Location</apex:facet>
+			           <apex:outputText value="Latitude: {!sv.Latitude__c}" /><br />
+			           <apex:outputText value="Longitude: {!sv.Longitude__c}" />             
+			       </apex:column>
+			
+			   </apex:dataTable>
+			</apex:repeat>
+			
+		</apex:panelGrid>
+	</apex:form> 
+
+</apex:page>

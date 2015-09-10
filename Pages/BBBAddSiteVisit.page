@@ -1,0 +1,96 @@
+<apex:page showHeader="false" 
+    standardStylesheets="false" 
+    sidebar="false" 
+    controller="BBBAddSiteVisitController"
+    action="{!checkAndSave}">
+    
+    <apex:include pageName="ImageBrowserStyles" />
+	
+	<div class="header ImageBrowserCaptureIcon">
+		<div class="title ">
+			Visualforce Mobile Demo <br/>
+			<span class="objTitle">Add Site Visit</span>			
+		</div> 
+	</div>
+	
+	<!-- Status Msg --> 
+	<apex:outputPanel styleClass="errorMessage" rendered="{!showMessage}">{!opMessage}</apex:outputPanel> 
+	
+	<apex:outputPanel rendered="{!showForm}" >
+		<!-- Form -->
+		<form id="AddSiteVisit" action="{!$Page.BBBAddSiteVisit}">
+			<input type="hidden" value="true" name="addingSiteVisit" />		
+			<input type="hidden" value="{!parentId}" name="id" />	
+			<input type="hidden" name="st" value="{!st}" />
+			<table>
+				<tr>
+					<td valign="top">Site Visit Name</td>
+					<td valign="top"><input type="text" name="siteVisitName" /></td>
+				</tr>
+				<tr>
+					<td valign="top">Site Visit Notes</td>
+					<td valign="top"><textarea name="siteVisitNotes"></textarea></td>
+				</tr>
+				<tr>
+					<td valign="top">Current Latitude:</td>
+					<td valign="top"><input type="text" name="siteVisitLatitude" id="lat" readonly="readonly" value="" /></td>
+				</tr>
+				<tr>
+					<td valign="top">Current Longitude:</td>
+					<td valign="top" ><input type="text" name="siteVisitLongitude" id="lon" readonly="readonly" value="" /></td>
+				</tr>
+				
+				<tr>
+					<td><input type="submit" class="greyBtn" value="Add sitevisit" /></td>
+					<td><a href="BBBSearchResult?searchTerm={!st}&obj=Account&filter=SiteVisit"  class="greyBtn">Cancel</a></td>
+				</tr>
+			</table>
+								
+		    <!-- Js stuff -->
+		    <script language="javascript">
+				function setCoordinates(){ 
+					
+					if( window.blackberry && window.blackberry.location.GPSSupported) {			
+				        var loc = window.blackberry.location;
+				        document.getElementById('lon').value = loc.longitude;				        	
+					    document.getElementById('lat').value = loc.latitude;
+				        loc.setAidMode(2);			
+				        loc.refreshLocation();
+				        loc.onLocationUpdate(function(){
+				        	var loc = window.blackberry.location;
+				        	var lon = loc.longitude;
+				        	var lat = loc.latitude;
+				        	if ((lat!=null) && (lon!=null) && !((lat==0) && (lon==0))){
+					        	document.getElementById('lon').value = lon;				        	
+					        	document.getElementById('lat').value = lat;				        	
+				        	}
+				        	else{
+				        		loc.setAidMode(1);
+				        		loc.refreshLocation();
+				        		loc.onLocationUpdate(function (){
+				        			var loc = window.blackberry.location;
+				        			var lon = loc.longitude;
+				        			var lat = loc.latitude;
+				        			document.getElementById('lon').value = lon;				        	
+					        		document.getElementById('lat').value = lat;		
+				        		});
+				        	}
+				        	
+				        });			        
+				    }
+				}				
+				setCoordinates();
+		    </script>	    
+		</form>
+		
+		
+		
+	</apex:outputPanel>
+	 
+	<apex:outputPanel rendered="{!showSuccessMessage}" >
+		<META http-equiv="refresh" content="0;URL=BBBSearchResult?searchTerm={!st}&obj=Account&filter=SiteVisit"> 
+		<script language="javascript">
+			window.location.href = 'BBBSearchResult?searchTerm={!st}&obj=Account&filter=SiteVisit'; 
+		</script>			
+	</apex:outputPanel>  
+</apex:page>

@@ -1,0 +1,69 @@
+<apex:page controller="AddSiteVisitController" 
+	showHeader="false" 
+    standardStylesheets="false" 
+    sidebar="false" >
+    
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=1;" />
+<apex:include pageName="contactImageBrowserCSS"/>
+	
+	<!-- Header -->
+	<div class="ImageBrowserHeader ImageBrowserCaptureIcon">
+		<div class="ImageBrowserTitle">
+			Visualforce Mobile Demo <br />
+			<span class="ImageBrowserObjTitle">Add site visit</span>
+		</div>
+	</div>
+	
+	
+	&nbsp;<br/>
+	
+	<!-- Status Msg -->
+	<apex:outputPanel styleClass="errorMessage" rendered="{!showMessage}">{!opMessage}</apex:outputPanel> 
+	
+	<!-- Form -->
+	<apex:form id="AddSiteVisit">
+		
+		<!-- Grid -->  
+		<apex:panelGrid columns="2" id="imageDetailsEntry"  >	  
+		
+			<apex:outputLabel value="Site Visit Name " for="svName"/>
+			<apex:inputField value="{!sv.Name}" id="svName"/>
+			
+			<apex:outputLabel value="Site Visit Notes: " for="svNotes"/>
+			<apex:inputField value="{!sv.Notes__c}" id="svNotes"/>
+			
+			<apex:outputLabel value="Current Latitude: " for="imageLat"/>
+			<apex:inputField value="{!sv.Latitude__c}" id="imageLat" />
+			
+			<apex:outputLabel value="Current Longitude: " for="imageLong"/>
+			<apex:inputField value="{!sv.Longitude__c}" id="imageLong" />
+			
+			<apex:commandButton action="{!save}" value="Add Site Visit" styleClass="btn" style="width:10em"/>
+			<apex:outputLink value="{!goBack}" styleClass="btn">Cancel</apex:outputLink>
+				 
+		</apex:panelGrid>  
+	    <script language="javascript" type="text/javascript">
+		    var imageLatId = '{!$Component.imageLat}';
+	       	var imageLongId = '{!$Component.imageLong}';
+	    </script>
+	</apex:form>
+	
+	<!-- Js stuff -->
+    <script language="javascript" type="text/javascript" src="{!$Resource.libphonegap}"></script>
+	<script language="javascript" type="text/javascript">
+	document.getElementById(imageLatId).readOnly = true;
+	document.getElementById(imageLongId).readOnly = true;
+
+    updateLocation = function(lat,lon) {
+		document.getElementById(imageLatId).value = lat;
+        document.getElementById(imageLongId).value = lon;		
+    }
+    Device.onGapInit = function() {
+        Device.Location.init(); 
+        Device.Location.callback = updateLocation;
+    }
+	Device.Location.init();
+	Device.onGapInit();
+	</script> 
+	
+</apex:page>

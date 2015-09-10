@@ -1,0 +1,12 @@
+<apex:page showHeader="false" sidebar="false">
+<script language="javascript" type="text/javascript">
+	
+	if(window.blackberry){
+		window.location.href='{!$Page.BBBImageBrowserSearch}';
+	}
+	else{
+		window.location.href='{!$Page.ImageBrowserSearch}';
+	}
+	
+</script>
+</apex:page>

@@ -1,0 +1,28 @@
+<apex:page title="Visualforce Mobile Demo: Image Browser" 
+           controller="imageBrowserController"  
+           showHeader="false"  
+           standardStylesheets="false" 
+           sidebar="false" 
+           id="ImageBrowserSearch">
+
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+<apex:include pageName="contactImageBrowserCSS"/>
+
+
+	<div class="ImageBrowserHeader ImageBrowserCaptureIcon">
+		<div class="ImageBrowserTitle">
+			Visualforce Mobile Demo <br />
+			<span class="ImageBrowserObjTitle">Image Browser</span>
+		</div>
+	</div>
+    
+
+    <br />
+
+
+	<apex:include pageName="{!$Page.ImageBrowserSearchDialog}" />
+    
+<script language="javascript">
+toggleShowFilter();
+</script>
+</apex:page>

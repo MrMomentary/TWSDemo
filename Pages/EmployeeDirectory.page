@@ -1,0 +1,115 @@
+<!--
+Copyright (c) 2008, Mark Sivill, Sales Engineering, Salesforce.com Inc.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. 
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+Neither the name of the salesforce.com nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission. 
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
+EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+ History
+
+ Version	Date			Author			Comments
+ 1.0		18-10-2008		Mark Sivill		Initial version
+
+-->
+<apex:page controller="EmployeeDirectoryController" sidebar="false">
+
+	<apex:sectionHeader title="Employee Directory" subtitle="{!Account.Name}"></apex:sectionHeader>
+
+	<apex:panelGrid columns="1">
+			Search for employees using the search box for example 'Mark Sivill' or 'Tom Brown'. You can also use wildcards 'T*m Smit*' and provide more than two words for mutliple people or spelling variations for example 'Claire Clare Jones' or 'Jacob Green Frank Andrews'.
+		<p></p>
+	</apex:panelGrid>
+  
+		<apex:panelGrid columns="2">
+			<apex:form >
+				<apex:inputText value="{!searchTerm}" size="50" id="theSearchTerm"/>
+				<apex:commandButton action="{!doSearch}" value="Search">
+				</apex:commandButton>
+			</apex:form>
+		</apex:panelGrid>
+
+		<p></p>
+
+	<apex:panelGrid columns="1" rendered="{!tooMany}">
+			No more than 10 search words can be used.
+		<p></p>
+	</apex:panelGrid>
+
+	<apex:panelGrid columns="1" rendered="{!smallWord}">
+			Search words must be at least 2 characters long.
+		<p></p>
+	</apex:panelGrid>
+
+	<apex:panelGrid columns="1" rendered="{!zeroAccount}">
+			ERROR - no account has been configured, please contact your System Administrator.
+		<p></p>
+	</apex:panelGrid>
+
+	<apex:panelGrid columns="1" rendered="{!manyAccount}">
+			ERROR - more than one account has been configured, please contact your System Administrator.
+		<p></p>
+	</apex:panelGrid>
+
+	<apex:panelGrid columns="1" rendered="{!internalError}">
+			ERROR - An internal error has occurred please contact your System Administrator.
+		<p></p>
+	</apex:panelGrid>
+
+	<apex:panelGrid columns="1" rendered="{!manyResults}">
+			Too many records found please make the query more specific.
+		<p></p>
+	</apex:panelGrid>
+
+	<apex:panelGrid columns="1" rendered="{!zeroResults}">
+			No records found.
+		<p></p>
+	</apex:panelGrid>
+
+	<apex:outputPanel layout="block" rendered="{!IF(AND(validSearch,NOT(firstEntry),NOT(zeroResults)), true, false)}">
+
+	  <apex:pageBlock title="Results" mode="view" id="theSearchResults">
+	  
+	    <apex:pageBlockTable value="{!searchResults}" var="data">
+	        <apex:column >
+	            <apex:facet name="header">Firstname</apex:facet>
+	            <apex:outputField value="{!data.FirstName}"/>
+	        </apex:column>
+	        <apex:column >
+	            <apex:facet name="header">Lastname</apex:facet>
+	            <apex:outputField value="{!data.LastName}"/>
+	        </apex:column>
+	        <apex:column >
+	            <apex:facet name="header">Department</apex:facet>
+	            <apex:outputField value="{!data.Department}"/>
+	        </apex:column>
+	        <apex:column >
+	            <apex:facet name="header">Email</apex:facet>
+	            <apex:outputField value="{!data.Email}"/>
+	        </apex:column>
+	        <apex:column >
+	            <apex:facet name="header">Mobile</apex:facet>
+	            <apex:outputField value="{!data.MobilePhone}"/>
+	        </apex:column>
+	        <apex:column >
+	            <apex:facet name="header">Phone</apex:facet>
+	            <apex:outputField value="{!data.Phone}"/>
+	        </apex:column>
+	        <apex:column >
+	            <apex:facet name="header">Fax</apex:facet>
+	            <apex:outputField value="{!data.Fax}"/>
+	        </apex:column>
+	    </apex:pageBlockTable>
+	  </apex:pageBlock>
+	
+	</apex:outputPanel>
+
+</apex:page>

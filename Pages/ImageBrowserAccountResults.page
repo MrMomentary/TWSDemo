@@ -1,0 +1,50 @@
+<apex:page title="Visualforce Mobile Demo: Image Browser" 
+           controller="imageBrowserController"  
+           showHeader="false"  
+           standardStylesheets="false" 
+           sidebar="false" 
+           id="ImageBrowserSearch">
+
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+<apex:include pageName="contactImageBrowserCSS"/>
+
+	<div class="ImageBrowserHeader ImageBrowserCaptureIcon">
+		<div class="ImageBrowserTitle">
+			Visualforce Mobile Demo <br />
+			<span class="ImageBrowserObjTitle">Account Search Results</span>
+		</div>
+	</div>
+    
+
+    <br />
+
+
+	<apex:include pageName="{!$Page.ImageBrowserSearchDialog}" />
+
+	<apex:form >   		    
+	    <apex:panelgrid columns="1" frame="border" styleClass="resultsTable" headerClass="sectionHead" styleClass="resultsTable">
+	
+	        <apex:facet name="header">Search Results</apex:facet>        
+	        
+	        <apex:dataTable value="{!searchResult}" var="account" columns="2" cellpadding="5" columnswidth="150px" rules="rows" styleClass="resultsTable">
+	
+	            <apex:column >
+	                <apex:facet name="header">Name</apex:facet>
+	
+	                <apex:commandLink value="{!account.Name}" action="{!viewThumbnails}">
+	                    <apex:param name="RecordId" value="{!account.id}" assignTo="{!recordID}" /> 
+	                    <apex:param name="RecordType" value="{!objectName}" assignTo="{!recordType}" /> 
+	                </apex:commandLink>
+	            </apex:column>
+	            
+	            <apex:column >
+	                <apex:facet name="header">Billing City</apex:facet>
+	                <apex:outputText value="{!account.BillingCity}" />             
+	            </apex:column>
+	
+	        </apex:dataTable>
+
+		</apex:panelGrid>
+	</apex:form>
+ 
+</apex:page>

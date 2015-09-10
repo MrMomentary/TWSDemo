@@ -1,0 +1,85 @@
+<apex:page title="Visualforce Mobile Demo: Image Browser" 
+           controller="imageBrowserController"  
+           showHeader="false"  
+           standardStylesheets="false" 
+           sidebar="false" 
+           id="ImageBrowserSearch">
+
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=1;" />
+<apex:include pageName="contactImageBrowserCSS"/>
+
+
+<div id="imageListPanel">
+    <div class="ImageBrowserHeader ImageBrowserCaptureIcon">
+		<div class="ImageBrowserTitle">
+			Visualforce Mobile Demo <br />
+			<span class="ImageBrowserObjTitle">Site Visit details</span>
+		</div>
+	</div>
+	
+    &nbsp;<br/>
+
+    <apex:form >
+
+        <apex:panelgrid columns="1" frame="border" styleClass="sectionBody resultsTable" headerClass="sectionHead">
+
+            
+
+		<apex:outputPanel >
+	        <apex:commandButton action="{!backToImageSearchSiteVisit}" value="Back" styleClass="btn"/>
+	        <!-- NOT ALLOWED IN IPHONE
+	        <input type="button" value="Add Image" class="btn" onclick="window.location.href='{!$Page.ImageCapture}?id={!siteVisit.Id}';" />
+	         -->
+		</apex:outputPanel>
+		
+		<apex:panelgrid columns="2" headerClass="sectionHead" styleClass="resultsTable sectionBody">
+            
+            	<apex:facet name="header">Site Visit Details</apex:facet>
+            
+            	<apex:outputText value="Site Visit Name:" />
+            	<apex:outputText value="{!siteVisit.Name}" />
+            	
+            	<apex:outputText value="Location:" />
+            	<apex:outputText >
+            		 Longitude:{!siteVisit.Longitude__c}<br />
+            		 Latitude:{!siteVisit.Latitude__c}<br />
+            		 <!-- 
+            		 <a href="#" onclick="toggleMap('{!siteVisit.Longitude__c}','{!siteVisit.Latitude__c}');">Map view</a>
+            		  -->
+            	</apex:outputText>
+            	
+            	<apex:outputText value="Notes:" />
+            	<apex:outputText value="{!siteVisit.Notes__c}" />
+            	
+            	
+            
+            </apex:panelgrid>
+		
+        <apex:dataTable value="{!siteVisit.Attachments}" var="pic" columns="2" rules="rows" cellpadding="5" columnswidth="50px" id="thumbnailTable" headerClass="sectionHead" styleClass="resultsTable sectionBody" rendered="{!siteVisit.Attachments.size > 0}">
+
+            <apex:column id="imageCol">            
+                <apex:facet name="header">Pictures</apex:facet>	                  
+                    <apex:outputPanel layout="block" styleClass="thumbnail">
+	                    <a onclick="toggleImage('{!URLFOR($Action.Attachment.Download, pic.id)}');" href="javascript:;" >  
+	                        <apex:image value="{!URLFOR($Action.Attachment.Download, pic.id)}" height="80px" width="80px" />	                        
+	                    </a>
+ 					</apex:outputPanel> 					
+            </apex:column>
+            <apex:column styleClass="topAlign">                  
+                <apex:facet name="header">Name / Details</apex:facet>
+                <b>{!pic.Name}</b> <br/>				
+            </apex:column>
+        </apex:dataTable>	  
+
+        <apex:commandButton action="{!backToImageSearchSiteVisit}" value="Back" styleClass="btn"/>	
+
+        </apex:panelGrid>
+    </apex:form>    
+</div>
+
+<apex:include pageName="{!$Page.ImageBrowserView}" />
+
+<!-- 
+<apex:include pageName="{!$Page.ImageBrowserMapView}" />
+ -->
+</apex:page>

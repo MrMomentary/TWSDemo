@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <enableActivities>true</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <fields>
+        <fullName>Age_Days__c</fullName>
+        <externalId>false</externalId>
+        <formula>NOW() -  CreatedDate</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Age (Days)</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Last_Reviewed__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>The last time this response was reviewed by the owner.</inlineHelpText>
+        <label>Last Reviewed</label>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Last_Used_Days_Ago__c</fullName>
+        <externalId>false</externalId>
+        <formula>NOW() -  Most_Recent_Use__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Last Used (Days Ago)</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Most_Recent_Use__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>The last time this Response was used in an RFP or other document.</inlineHelpText>
+        <label>Most Recent Use</label>
+        <summarizedField>Question__c.CreatedDate</summarizedField>
+        <summaryForeignKey>Question__c.Response__c</summaryForeignKey>
+        <summaryOperation>max</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Next_Review_Date__c</fullName>
+        <externalId>false</externalId>
+        <formula>Last_Reviewed__c  +  Periodic_Review_Days__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Next Review Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Originating_RFP__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <inlineHelpText>Document where this response was originally authored.</inlineHelpText>
+        <label>Originating RFP</label>
+        <referenceTo>RFP__c</referenceTo>
+        <relationshipLabel>New Responses</relationshipLabel>
+        <relationshipName>Responses</relationshipName>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Periodic_Review_Days__c</fullName>
+        <defaultValue>182</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>The number of days  between periodic reviews of this response.</inlineHelpText>
+        <label>Periodic Review (Days)</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Popularity_Index__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF (Times_Used__c &gt; 0,
+Times_Used__c / ( ( Last_Used_Days_Ago__c + 30) / 30 ),
+0
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Relative numeric value of this response based on total number of times used and how long ago the response was last used.  Popularity index decays on a monthly basis from last date of usage.</inlineHelpText>
+        <label>Popularity Index</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Response_Text__c</fullName>
+        <description>The text of the response that is pasted into a document.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The text of the response.</inlineHelpText>
+        <label>Response Text</label>
+        <length>32000</length>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Html</type>
+        <visibleLines>25</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Status__c</fullName>
+        <description>Describes the status of the Response in RFPForce with respect to lifecycle management of the response.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The current status of this Response.</inlineHelpText>
+        <label>Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Draft</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Reviewed</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Under Periodic Review</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Duplicate</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>TempResponseId__c</fullName>
+        <externalId>true</externalId>
+        <label>TempResponseId</label>
+        <length>60</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Times_Used__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Number of times this response has been used in an RFP.</inlineHelpText>
+        <label>Times Used</label>
+        <summaryForeignKey>Question__c.Response__c</summaryForeignKey>
+        <summaryOperation>count</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Used_more_than_once_in_an_RFP__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Indicates how many times this response was used more than 1 time in an RFP.  This usually indicates the response answers many questions and needs to be divided into smaller responses.</inlineHelpText>
+        <label>Used more than once in an RFP</label>
+        <summaryFilterItems>
+            <field>Question__c.Override_Warning__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </summaryFilterItems>
+        <summaryForeignKey>Question__c.Response__c</summaryForeignKey>
+        <summaryOperation>count</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <label>Response</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Originating_RFP__c</columns>
+        <columns>Status__c</columns>
+        <columns>CREATED_DATE</columns>
+        <columns>CREATEDBY_USER</columns>
+        <columns>LAST_UPDATE</columns>
+        <columns>Popularity_Index__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <listViews>
+        <fullName>Responses_Ranked_by_Popularity_Index</fullName>
+        <columns>NAME</columns>
+        <columns>Popularity_Index__c</columns>
+        <columns>Last_Reviewed__c</columns>
+        <columns>Last_Used_Days_Ago__c</columns>
+        <columns>Periodic_Review_Days__c</columns>
+        <columns>Age_Days__c</columns>
+        <columns>Status__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>Responses Ranked by Popularity Index</label>
+    </listViews>
+    <nameField>
+        <label>Title</label>
+        <trackHistory>true</trackHistory>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Responses</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+    <validationRules>
+        <fullName>Check_Response_State</fullName>
+        <active>true</active>
+        <description>Response state must be in Draft before changing the Periodic Review (Days) value.  This is to preserve time-based workflow on the Response object.</description>
+        <errorConditionFormula>NOT( ISPICKVAL( Status__c, &apos;Draft&apos;) ) &amp;&amp;  ISCHANGED( Periodic_Review_Days__c )</errorConditionFormula>
+        <errorDisplayField>Periodic_Review_Days__c</errorDisplayField>
+        <errorMessage>To preserve time-based workflow, please set the Status to Draft, save, and then change this value.</errorMessage>
+    </validationRules>
+</CustomObject>

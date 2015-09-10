@@ -1,0 +1,213 @@
+<apex:page showHeader="false" 
+    standardStylesheets="false" 
+    sidebar="false"
+    controller="BBBSearchResultController">
+    
+    <apex:include pageName="ImageBrowserStyles" />
+    
+    
+    <div class="header ImageBrowserCaptureIcon">
+		<div class="title ">
+			Visualforce Mobile Demo <br/>
+			<span class="objTitle">{!objectName} Search Results</span>			
+		</div> 
+	</div>
+	
+	<!-- 
+		Search box	
+	 -->
+	 
+	  <script>
+        
+        	var selectFilterId = 'filter';
+        	var selectTypeId = 'obj';
+        	
+        	function toggleShowFilter(){
+				show = document.getElementById('showRow');
+				type = document.getElementById(selectTypeId);
+				
+				for(i=0; i < type.length ; i++){
+					if (type.options[i].selected && type.options[i].value == 'Contact'){	
+						
+						show.style.display = 'none';
+						break;
+					}
+					if (type.options[i].selected && type.options[i].value == 'Account'){
+						
+						show.style.display = '';
+						break;
+					}
+				}		
+			}	        
+      </script>	    
+	
+	<form action="{!$Page.BBBSearchResult}" >
+		<table>
+			<tr>
+				<td align="right">Search</td>
+				<td><input type="text" name="searchTerm" id="searchTerm" /></td>
+			</tr>
+			<tr>
+				<td align="right">in</td>
+				<td>
+					<select id="obj" name="obj" onchange="toggleShowFilter();" width="100%">
+						<option value="Account">Account</option>
+						<option value="Contact">Contact</option>
+						
+					</select>
+				</td>
+			</tr>
+			<tr id="showRow">
+				<td align="right">show its</td>
+				<td>
+					<select id="filter" name="filter" width="100%">
+						<option value="Contact">Contact</option>
+						<option value="SiteVisit">Site Visits</option>
+					</select>
+				</td>
+			</tr> 
+			<tr>
+				<td></td>
+				<td align="right"><input type="submit" value="Go!" /></td>
+			</tr>
+		</table>
+	</form>		
+    
+    <script>
+    	toggleShowFilter();
+    </script>
+	
+	
+    <!-- 
+    	Gallery Results are shown in this panel
+     -->    
+	<apex:outputPanel rendered="{!showGalleryResult}" >
+		
+		<!-- Script to show the image bigger -->
+		<script language="javascript">  
+    
+			function toggleImage(img){
+				
+				list = document.getElementById('imageListPanel');
+				image = document.getElementById('viewImagePanel');
+				div = document.getElementById('imgPlace');
+				
+				if((list.style.display == 'none') && (img == null) ){
+					
+					list.style.display = '';
+					image.style.display = 'none';
+					
+				} else {
+				
+					list.style.display = 'none';
+					image.style.display = '';
+					div.innerHTML = '<img src="' + img + '" width="318px" />';
+										
+				}				
+			}
+			
+		</script>
+		
+		<!-- Gallery List  -->
+		<div id="imageListPanel">
+			
+			<span class="greyBtn" style="width:100%">Search results</span>
+			<br />
+			<!-- The gallery Table  -->					
+			<table class="searchResult" align="center">
+			<apex:repeat value="{!GalleryResultList}" var="galleryResult">
+				<tr>
+					<td width="30%">					
+						<apex:repeat value="{!galleryResult.photos}"  var="photo"  rendered="{!galleryResult.haveAttachments}">
+							<p>
+							 	<a onclick="toggleImage('{!URLFOR($Action.Attachment.Download, photo.id)}');" href="javascript:;" >  
+							 		<apex:image value="{!URLFOR($Action.Attachment.Download, photo.id)}" height="80px" width="80px" />
+							 	</a>
+							</p>				 						
+						</apex:repeat>
+						<apex:image value="{!$Resource.NoImage}" height="80px" width="80px" rendered="{!!galleryResult.haveAttachments}" />						
+					</td>
+					<td>
+						<strong>{!galleryResult.Name} </strong>
+						<br />{!IF(galleryResult.ReportsTo != null,'Reports to: '+galleryResult.ReportsTo,'')}
+						<br />{!IF(galleryResult.Assistant != null,'Assistant: '+galleryResult.Assistant,'')}
+						<br />{!IF(galleryResult.Description != null,galleryResult.Description,'')}
+						
+						<br/>						
+						<a href="{!$Page.BBBimageCapture}?id={!galleryResult.ItemId}&st={!SearchTerm}&obj={!objectName}&filter={!filter}" class="greyBtn">
+							Add Image
+						</a>
+					</td> 
+				</tr>
+			</apex:repeat>		
+			</table>
+					
+		</div>
+		
+		<!-- Show the big picture  -->
+		<div id="viewImagePanel" style="display:none">
+			<a href="javascript:;" onclick="toggleImage(null);" class="greyBtn" >Back</a>
+			<br />	
+			<div id="imgPlace"></div>	  
+			&nbsp;<br/>
+			<a href="javascript:;" onclick="toggleImage(null);" class="greyBtn" >Back</a>				    
+		</div>
+		
+	</apex:outputPanel>
+
+    <!-- 
+    	String List Results are shown in this panel
+     -->
+	<apex:outputPanel rendered="{!showStringResult}" >
+		<span class="greyBtn" style="width:100%">Search results</span>
+		<br />
+		<table class="searchResult" align="center">
+			<tr>
+				<th>Name</th>
+				<th>Billing City</th>
+			</tr>
+		<apex:repeat value="{!StrResultList}" var="str">
+			<tr>
+				<td>
+					<a href="{!$Page.BBBImageGalleryBrowser}?id={!str.Id}&obj={!objectName}&filter={!filter}&st={!SearchTerm}">{!str.Col1}</a>
+				</td>
+				<td>{!str.Col2}</td>
+			</tr>
+		</apex:repeat>
+		</table>
+	</apex:outputPanel>
+	
+	<apex:outputPanel rendered="{!showSiteVisitResult}" >
+		<span class="greyBtn" style="width:100%">Search results</span>
+		<br />
+		
+		<apex:repeat value="{!StrResultList}" var="account">		
+		<table class="searchResult" align="center">
+			<tr>
+				<th colspan="2" width="100%">
+					<table  width="100%">
+						<tr>
+							<td width="70%">Account: {!account.Col1}</td>						
+							<td ><a style="width=10em;" href="{!$Page.BBBAddSiteVisit}?id={!account.Id}&obj={!objectName}&filter={!showFilter}&st={!recordName}"  class="greyBtn">Add Site Visit</a></td>
+						</tr>					
+					</table>
+				</th>
+			</tr>
+		
+			<apex:repeat value="{!account.siteVisits}" var="sv">
+				<tr>
+					<td width="100%">
+						<a href="{!$Page.BBBImageGalleryBrowser}?id={!sv.Id}&obj={!objectName}&filter={!Filter}&st={!SearchTerm}">{!sv.Name}</a>
+					</td>
+					<td><span style="white-space:nowrap">Latitude: {!sv.Latitude__c}</span><br />
+						<span style="white-space:nowrap">Longitude: {!sv.Longitude__c}</span>
+					</td>
+				</tr>
+			</apex:repeat>
+			
+		
+		</table>
+		</apex:repeat>
+	</apex:outputPanel>
+	
+</apex:page>

@@ -1,0 +1,73 @@
+<apex:page showHeader="false" 
+    standardStylesheets="false" 
+    sidebar="false" >
+    
+     <script>
+        
+        	var selectFilterId = 'filter';
+        	var selectTypeId = 'obj';
+        	
+        	function toggleShowFilter(){
+				show = document.getElementById('showRow');
+				type = document.getElementById(selectTypeId);
+				
+				for(i=0; i < type.length ; i++){
+					if (type.options[i].selected && type.options[i].value == 'Contact'){	
+						
+						show.style.display = 'none';
+						break;
+					}
+					if (type.options[i].selected && type.options[i].value == 'Account'){
+						
+						show.style.display = '';
+						break;
+					}
+				}		
+			}	        
+      </script>	    
+        
+    <apex:include pageName="ImageBrowserStyles" />
+	
+	<div class="header ImageBrowserCaptureIcon">
+		<div class="title ">
+			Visualforce Mobile Demo <br/>
+			<span class="objTitle">Image Browser</span>
+		</div>
+	</div>
+	
+	<form action="{!$Page.BBBSearchResult}" >
+		<table>
+			<tr>
+				<td align="right">Search</td>
+				<td><input type="text" name="searchTerm" id="searchTerm" /></td>
+			</tr>
+			<tr>
+				<td align="right">in</td>
+				<td>
+					<select id="obj" name="obj" onchange="toggleShowFilter();" style="width:9em;">
+						<option value="Account">Account</option>
+						<option value="Contact">Contact</option>
+						
+					</select>
+				</td>
+			</tr>
+			<tr id="showRow">
+				<td align="right">show its</td>
+				<td>
+					<select id="filter" name="filter" style="width:9em;">
+						<option value="Contact" >Contact</option>
+						<option value="SiteVisit">Site Visits</option>
+					</select>
+				</td>
+			</tr> 
+			<tr>
+				<td></td>
+				<td align="right"><input type="submit" value="Go!" /></td>
+			</tr>
+		</table>
+	</form>		
+    
+    <script>
+    	toggleShowFilter();
+    </script>
+</apex:page>

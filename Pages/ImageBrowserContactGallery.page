@@ -1,0 +1,61 @@
+<apex:page title="Visualforce Mobile Demo: Image Browser" 
+           controller="imageBrowserController"  
+           showHeader="false"  
+           standardStylesheets="false" 
+           sidebar="false" 
+           id="ImageBrowserSearch">
+
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=1;" />
+<apex:include pageName="contactImageBrowserCSS"/>
+
+
+<div id="imageListPanel">
+    <div class="ImageBrowserHeader ImageBrowserCaptureIcon">
+		<div class="ImageBrowserTitle">
+			Visualforce Mobile Demo <br />
+			<span class="ImageBrowserObjTitle">Contact Search Results</span> 
+		</div>
+	</div>
+	
+    &nbsp;<br/>
+	
+    <apex:form >  
+
+
+        <apex:panelgrid columns="1" frame="border" styleClass="sectionBody resultsTable" headerClass="sectionHead">
+
+        <apex:commandButton action="{!backToImageSearch}" value="Back" styleClass="btn"/>
+
+        <apex:dataTable value="{!relatedContacts}" var="image" columns="2" rules="rows" cellpadding="5" columnswidth="50px" id="thumbnailTable" styleClass="sectionBody resultsTable" headerClass="sectionHead">
+
+            <apex:column id="imageCol">            
+                <apex:facet name="header">Pictures</apex:facet>
+                <apex:repeat value="{!image.Attachments}" var="pic"> 	                  
+                    <apex:outputPanel layout="block" styleClass="thumbnail">
+	                    <a onclick="toggleImage('{!URLFOR($Action.Attachment.Download, pic.id)}');" href="javascript:;" >  
+	                        <apex:image value="{!URLFOR($Action.Attachment.Download, pic.id)}" height="80px" width="80px" />	                        
+	                    </a>
+ 					</apex:outputPanel>
+                </apex:repeat>
+                <apex:image value="{!$Resource.NoImage}" height="80px" width="80px" rendered="{!if(image.hasAttachments,'false','true')}"/> 
+            </apex:column>
+            <apex:column styleClass="topAlign">                  
+                <apex:facet name="header">Name / Details</apex:facet>
+                <b>{!image.Name}</b> <br/>
+                Reports To: {!image.ReportsTo.Name} <br/>
+                Assistant: {!image.AssistantName} <br/>
+                <!-- NOT ALLOWED IN IPHONE
+                <a href="{!$Page.ImageCapture}?id={!image.Id}">Add image</a>
+                 -->  
+            </apex:column>
+        </apex:dataTable>	  
+
+        <apex:commandButton action="{!backToImageSearch}" value="Back" styleClass="btn"/>	
+
+        </apex:panelGrid>
+    </apex:form>
+</div>
+
+<apex:include pageName="{!$Page.ImageBrowserView}" />
+
+</apex:page>

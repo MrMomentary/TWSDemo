@@ -1,0 +1,46 @@
+<apex:page action="{!selectObject}" standardStylesheets="false" controller="ProximitySearchController" showHeader="false" sidebar="false" title="Select {!objectType}" >
+
+<html>
+
+	<head>
+		<title>Select {!objectType}</title>
+		<apex:outputPanel layout="none" rendered="{!redirect}">	
+			<meta http-equiv="refresh" content="0;URL={!redirectionUrl}">	 
+		</apex:outputPanel>
+		
+		<apex:outputPanel layout="none" rendered="{!NOT(redirect)}">			
+			<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=1;" />
+			<apex:include pageName="ProximitySearchCSS"/>			
+		</apex:outputPanel>
+		<style>
+			a  {	font-size:1.2em;
+					line-height:1.5;
+			    }
+		</style>
+	</head>
+	
+	<apex:outputPanel layout="none" rendered="{!NOT(redirect)}">	
+	<body>	
+
+		<div class="ImageBrowserHeader ImageBrowserCaptureIcon">
+			<div class="ImageBrowserTitle">
+				Visualforce Mobile Demo <br />
+				<span class="ImageBrowserObjTitle">Proximity Search</span>
+			</div>
+		</div>
+		<br />
+		
+		<a href="{!cancelLink}" class="btn">Back</a><br />
+		<div style="margin-left:1em;">
+		<apex:repeat value="{!elems}" var="e">
+			<a href="{!linkPrefix}&objectId={!e.id}&objectName={!e.name}">{!e.name}</a><br />
+		</apex:repeat>
+		</div>
+		<br />
+		<a href="{!cancelLink}" class="btn">Back</a>
+		<br />
+		
+	</body>	
+	</apex:outputPanel>
+	
+</apex:page>

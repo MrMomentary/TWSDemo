@@ -1,0 +1,518 @@
+<apex:page action="{!perform}" standardStylesheets="false" controller="ProximitySearchController" standardStylesheets="false" sidebar="false" showHeader="false" title="Salesforce Mobile - Proximity Search">
+<html>
+	<head>
+		<title>Salesforce Mobile - Proximity Search</title>
+		<apex:outputPanel layout="none" rendered="{!redirect}">	
+			<meta http-equiv="refresh" content="0;URL={!redirectionUrl}">	 
+		</apex:outputPanel>
+		
+		<apex:outputPanel layout="none" rendered="{!NOT(redirect)}">
+		
+			<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=1;" />
+			<apex:include pageName="ProximitySearchCSS"/>
+			<script src="http://maps.google.com/maps?file=api&v=2&key={!key}&sensor=false" type="text/javascript" language="javascript"></script>
+			<script type="text/javaScript" language="javascript" src="{!$Resource.proxsearchlibphonegap}"></script>
+			
+		</apex:outputPanel>
+		<style>
+		.errorMsg { font-weight:bold;
+					color:red;
+					line-height: 1.5;
+				  }
+				  body{font-size:0.9em; }
+				  input{font-size:1em;}
+				  select{font-size:1em; height:1.5em;}
+				  
+		#BBTable { 	height:{!staticMapHeight}px; 
+					width:100%;
+					margin:0px;
+					padding:0px;					
+					}
+		
+		a {text-decoration:none;}
+		
+		#BBTable table {height:{!staticMapHeight}px; 
+						width:100%;
+						margin:0px;
+						padding:0px;						
+						}
+					
+		#BBTable table img {height:{!staticMapHeight}px;
+							width:{!staticMapWidth}px;}
+							
+		.letterCase { background-color:rgb(100, 186, 74); border:solid 1px black; }
+		
+		.letterContact{ background-color:rgb(107, 168, 255); border:solid 1px black;}
+		
+		.letterLead{ background-color:rgb(252, 243, 87); border:solid 1px black;}
+		
+		.letter{ background-color:rgb(252, 118, 106); border:solid 1px black;}
+		
+		</style>
+	</head>
+	<apex:outputPanel layout="none" rendered="{!NOT(redirect)}">
+	<body onload="initialize()" onunload="GUnload()">	
+		
+		<div id="map" style="width:100%;height:379px"> </div>		
+		
+		<a name="searchDiv"></a>
+		<div class="ImageBrowserHeader ImageBrowserCaptureIcon">			
+			<div class="ImageBrowserTitle">
+				Visualforce Mobile Demo <span id="topMenu" style="float:right;"><a id="searchAgainBtn" onclick="return toggleSearchAgainBtn();" class="btn" style="margin:0px; margin-right:1em; width:9em; white-space:nowrap; text-decoration:none;">Search again</a></span><br/>
+				<span class="ImageBrowserObjTitle">Proximity Search</span>
+			</div>
+		</div>	
+		<br />
+		<form action="{!$Page.ProximitySearch}" method="get" style="margin-left:1em;line-height: 2.8;">		
+					
+			<div class="errorMsg">{!objectErrorMsg}</div>
+			<input type="radio" id="currentLocationRadioButton" name="mapCenter" value="currentLocation" {!if((mapCenter=='currentLocation') || (mapCenter==null) ,'checked=\"checked\"','')} /><label for="currentLocationRadioButton" id="currentLocationLabel">Current Location: unknown</label> <br />
+			<input type="hidden" name="latitude" value="{!centerLat}" id="currentLatitude" />
+			<input type="hidden" name="longitude" value="{!centerLon}" id="currentLongitude"/>
+			<input type="radio" id="objectRadioButton" name="mapCenter" value="object" {!if(mapCenter=='object','checked=\"checked\"','')}/>
+			
+			<select name="objectType" style="padding:2px;">
+				<option value="Contact" {!if(objectType=='Contact','selected=\"selected\"','')}>Contact</option>
+				<option value="Lead" {!if(objectType=='Lead','selected=\"selected\"','')}>Lead</option>
+			</select> 
+			<br />
+			<input type="hidden" name="objectId" value="{!objectId}" id="objectId"/>
+			<div>
+				<table><tr><td>
+				<input type="text" name="objectName" value="{!objectName}" readonly="readonly" style="margin-left:1.7em;">				
+				</td><td><input type="button" name="selectObject" onclick="$('submitBtn').name='selectObject';$('submitBtn').click();" style="background:url('{!URLFOR($Resource.LookupButton)}') no-repeat; border:none; height:20px; width:25px;"/><br />
+			 	</td></tr></table>
+			 </div>
+				
+			Show the nearest <input type="text" name="maxShown" value="{!if(maxShown==null,'5',maxShown)}" size="3"/><br />
+			<div class="errorMsg">{!maxShownErrorMsg}</div>
+			
+			<input type="checkbox" name="searchContacts" {!if(searchContacts,'checked=\"checked\"','')} />Contacts
+			<input type="checkbox" name="searchLeads" {!if(searchLeads,'checked=\"checked\"','')} />Leads
+			<input type="checkbox" name="searchCases" {!if(searchCases,'checked=\"checked\"','')} />Cases
+			<input id="submitBtn" type="submit" name="search" value="Search" class="btn" />
+			<br />
+					
+		</form>
+		
+		<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+		
+		
+		
+		<script type="text/javascript" language="javascript">	
+
+			function $(id){ return document.getElementById(id);}
+			var	lat = '{!lat}';
+			var	lon = '{!lon}';	
+			var staticMapHeight = {!staticMapHeight};
+			var staticMapWidth = {!staticMapWidth};
+			var BBChangedLat = lat;
+			var BBChangedLon = lon;
+			var currentLatitude = $('currentLatitude');
+			var currentLongitude = $('currentLongitude');
+			var zoomLevel = {!zoomLevel};
+			var gmapskey = '{!key}';
+			
+			var elems = new Array();			
+			<apex:repeat value="{!elems}" var="elem">elems.push({lat:{!elem.latitude},lon:{!elem.longitude},type:'{!elem.objectType}',name:'{!elem.name}',address:'{!elem.addressOutput}'.replace(/\+/g,'<br />'),phone:'{!elem.phone}'});
+			</apex:repeat>			
+		</script>
+		<script type="text/javascript" language="javascript">
+		
+			function isBlackberry(){
+				return window.blackberry;
+			}
+			
+			function isIphone(){
+				return navigator.userAgent.indexOf('iPhone') != -1;
+			}
+		
+			function hasClassName(element, className) {
+		    	var elementClassName = element.className;
+		    	return 	(elementClassName.length > 0 && (elementClassName == className ||
+		      			new RegExp("(^|\\s)" + className + "(\\s|$)").test(elementClassName)));
+			}		    	
+			function addClassName(element, className) {
+				if (!hasClassName(element, className))
+					element.className += (element.className ? ' ' : '') + className;
+				return element;
+			}		    	
+			
+			function toggleSearchAgainBtn(){
+			
+				btn = $('searchAgainBtn');
+				if(btn.innerHTML == 'Search again'){
+					window.location.href = '#searchDiv';			
+					btn.innerHTML = 'Back to map';
+				}
+				else{				
+					window.scrollTo(0,0);			
+					btn.innerHTML = 'Search again';
+				}	
+				return true;		
+			}
+			
+			function LatToY(lat){
+				pi = Math.acos(-1);
+ 				return Math.round(268435456 - 85445659.44705395 * Math.log((1 + Math.sin(lat * pi / 180)) / (1 - Math.sin(lat * pi / 180))) / 2);
+			}
+			
+			function YToLat(y){
+				pi = Math.acos(-1);
+				return (pi / 2 - 2 * Math.atan(Math.exp((Math.round(y) - 268435456) / 85445659.44705395))) * 180 / pi; 
+			}
+			
+			function XToLon(x){
+				pi = Math.acos(-1);
+				return ((Math.round(x) - 268435456) / 85445659.44705395) * 180/ pi; 			
+			}
+			
+			function LonToX(lon){
+				pi = Math.acos(-1);
+				return Math.round(268435456 + 85445659.44705395 * lon * pi / 180);  
+			}
+			
+			function goUp(){
+				pixels = -1/4*staticMapHeight;
+				BBChangedLat = YToLat(LatToY(BBChangedLat) + (pixels * Math.pow(2,(21 - zoomLevel))));
+				redrawBBMap();
+			}
+			
+			function goDown(){
+				pixels = 1/4*staticMapHeight;
+				BBChangedLat = YToLat(LatToY(BBChangedLat) + (pixels * Math.pow(2,(21 - zoomLevel))));
+				redrawBBMap();
+			}
+			
+			function goLeft(){
+				pixels = -1/4*staticMapWidth;
+				BBChangedLon = XToLon(LonToX(BBChangedLon) + (pixels * Math.pow(2,(21 - zoomLevel))));				
+				redrawBBMap();
+			}
+			
+			function goRight(){
+				pixels = 1/4*staticMapWidth;
+				BBChangedLon = XToLon(LonToX(BBChangedLon) + (pixels * Math.pow(2,(21 - zoomLevel))));				
+				redrawBBMap();
+			}
+			
+			function zoomIn(){
+				zoomLevel += 1;
+				redrawBBMap();
+			}
+			
+			function zoomOut(){
+				zoomLevel -= 1;
+				redrawBBMap();
+			}
+			
+			function redrawBBMap(){
+						
+				$('imgMap').src = getBBImagePath();			
+			}
+			
+			function getBBImagePath(){
+			
+				var params = new Array();
+		    	params[0] = 'center='+BBChangedLat+','+BBChangedLon;
+		    	params[1] = 'zoom=' + zoomLevel;
+		    	params[2] = 'size='+staticMapWidth+'x'+staticMapHeight;
+		    	params[3] = 'maptype=mobile';
+		    	
+		    	var markers = new Array();		    	
+		    	
+		    	for(var i=0; i < elems.length; i++){
+		    	
+		    		elem = elems[i];
+		    		if(elem.type == 'Case'){
+		    			color = 'green';	
+		    		}
+		    		else if(elem.type == 'Lead'){
+		    			color = 'yellow';
+		    		}
+		    		else if (elem.type == 'Contact'){
+		    			color = 'blue';		    			
+		    		}
+		    		else{
+		    			color = 'red';
+		    		}
+		    		markers[i] = elem.lat+','+elem.lon+','+color+String.fromCharCode(97+i);		    		
+		    	
+		    	}
+		    	
+		    	markers[i] = lat+','+lon;
+		    	
+		    	params[4] = 'markers='+markers.join('|');
+		    	params[5] = 'key='+gmapskey;
+		    	
+		    	return 'http://maps.google.com/staticmap?'+params.join('&');	
+			
+			}
+			
+			////////////// BLACKBERRY FUNCTIONS /////////////////	
+			function loadBBMap(){
+			
+				var imgPath = getBBImagePath();		
+				
+				var mapDiv = $('map');
+				
+				var iframeContent = '';
+				for(var i=0; i < elems.length; i++){
+
+					elem = elems[i];
+					iframeContent += '<span class="letter'+elem.type+'">'+String.fromCharCode(65+i)+'</span> <strong>'+elem.type+': '+elem.name+'</strong><br />'+elem.phone+'<br />'+elem.address+'<br />';
+					
+				}
+				
+				mapDiv.innerHTML = '<table><tr><td><table><tr><td colspan="3" style="text-align:center;"><a href="#" onclick="goUp();">&#9650;</a></td></tr><tr><td><a href="#" onclick="goLeft();">&#9668;</a></td><td><img id="imgMap" src="'+imgPath+'" width="'+staticMapWidth+'" height="'+staticMapHeight+'"/></td><td><a href="#" onclick="goRight();">&#9658;</a></td></tr><tr><td colspan="3" style="text-align:center;"><a href="#" onclick="goDown();">&#9660;</a><span style="float:right;margin-right:10px"><a href="#" onclick="zoomIn();"><span>+</span></a> &nbsp; <a href="#" onclick="zoomOut();"><span>-</span></a></span></td></tr></table></td><td style="font-size:smaller;">'+iframeContent+'</td></tr></table>';
+					
+			}
+			
+			///////////// IPHONE FUNCTIONS ////////////////////
+			
+			//Zooms out centered view to extend to all markers
+			function bestFitWithCenter(map, bounds, mapCenter) {
+				var swLL = bounds.getSouthWest();
+				var neLL = bounds.getNorthEast();			
+				var marginRatio = 0.0001;			
+				var minLat = Math.min(2*mapCenter.lat() - neLL.lat(), swLL.lat());
+				var maxLat = Math.max(2*mapCenter.lat() - swLL.lat(),  neLL.lat());
+				var minLng = Math.min(2*mapCenter.lng() - neLL.lng(), swLL.lng());
+				var maxLng = Math.max(2*mapCenter.lng() - swLL.lng(), neLL.lng());			
+				var minLatLng = new GLatLng(minLat-marginRatio, minLng-marginRatio);
+				var maxLatLng = new GLatLng(maxLat+marginRatio, maxLng+marginRatio);			
+				bounds.extend(maxLatLng);
+				bounds.extend(minLatLng);			
+				var zoom = map.getBoundsZoomLevel(bounds);
+				if (zoom > 7){
+					zoom = 7;
+				}
+				map.setZoom(zoom);
+				map.setCenter(mapCenter);
+			}
+			
+			function bestFit(map, bounds) {
+				map.setZoom(map.getBoundsZoomLevel(bounds));
+				map.setCenter(bounds.getCenter());
+			}
+			
+			//Load map
+			function loadMap() {					
+
+				var caseIcon = new GIcon(G_DEFAULT_ICON);
+				caseIcon.shadow = null;
+				caseIcon.image = "https://c.na1.visual.force.com/img/icon/cases24.png";
+				caseIcon.iconSize = new GSize(24, 24);
+				
+				var leadIcon = new GIcon(G_DEFAULT_ICON);
+				leadIcon.shadow = null;
+				leadIcon.image = "https://c.na1.visual.force.com/img/icon/leads24.png";
+				leadIcon.iconSize = new GSize(24, 24);
+				
+				var contactIcon = new GIcon(G_DEFAULT_ICON);
+				contactIcon.shadow = null;
+				contactIcon.image = "https://c.na1.visual.force.com/img/icon/contacts24.png";
+				contactIcon.iconSize = new GSize(24, 24);		
+
+				mapPlace = document.getElementById("map");
+				var bounds = new GLatLngBounds();
+				var map = new GMap2(mapPlace);      	 
+
+				map.addControl(new TextualZoomControl());
+				var point = new GLatLng(lat,lon);
+				
+				map.setCenter(point, 5);	
+				
+				map.addOverlay(new GMarker(point));
+				
+				for(var i=0; i < elems.length; i++){
+					
+					var elem = elems[i];
+					var	elemPoint = new GLatLng(elem.lat,elem.lon);
+					var marker;
+					if (elem.type == 'Case'){
+						marker = new GMarker(elemPoint, { icon:caseIcon });	
+					}
+					else if (elem.type == 'Contact'){
+						marker = new GMarker(elemPoint, { icon:contactIcon });	
+					}
+					else if (elem.type == 'Lead'){
+						marker = new GMarker(elemPoint, { icon:leadIcon });	
+					}
+					marker.elem=elem;
+					map.addOverlay(marker);			
+					bounds.extend(marker.getPoint());
+					GEvent.addListener(marker, "click", function() {
+						this.openInfoWindowHtml('<strong>'+this.elem.type+': '+this.elem.name+'</strong><br/><a href="tel:'+elem.phone+'">'+elem.phone+'</a><br />'+this.elem.address);
+					});		
+				}
+				
+				if (elems.length>1){
+					bestFitWithCenter(map, bounds, point);
+				}
+				
+			}
+			
+			//Detect user location
+	        function setCoordinates(){ 
+					
+					$('currentLocationLabel').innerHTML = 'Current Location: searching...';
+					if( window.blackberry && window.blackberry.location.GPSSupported) {			
+				        var loc = window.blackberry.location;
+				        currentLatitude.value = loc.latitude;				        	
+					    currentLongitude.value = loc.longitude;	
+				        loc.setAidMode(2);			
+				        loc.refreshLocation();
+				        loc.onLocationUpdate(function(){
+				        	var loc = window.blackberry.location;
+				        	var lon = loc.longitude;
+				        	var lat = loc.latitude;
+				        	if ((lat!=null) && (lon!=null)){
+					        	currentLatitude.value = lat;				        	
+					        	currentLongitude.value = lon;				        	
+					        	$('currentLocationLabel').innerHTML = 'Current Location: '+lat+', '+lon;
+				        	}
+				        	else{
+				        		loc.setAidMode(1);
+				        		loc.refreshLocation();
+				        		loc.onLocationUpdate(function (){
+				        			var loc = window.blackberry.location;
+				        			var lon = loc.longitude;
+				        			var lat = loc.latitude;
+				        			if ((lat!=null) && (lon!=null)){
+					        			currentLatitude.value = lat;				        	
+						        		currentLongitude.value = lon;
+						        		$('currentLocationLabel').innerHTML = 'Current Location: '+lat+', '+lon;
+						        	}
+					        		else{							        		
+							        	$('currentLocationLabel').innerHTML = 'Current Location: User';		        	
+							        }	
+				        		});
+				        	}
+				        	
+				        });			        
+				    }
+				    else if(navigator.userAgent.indexOf("iPhone") != -1){				    
+				    	updateLocation = function(lat,lon) {
+							if ((lat!=null) && (lon!=null)){
+								currentLatitude.value = lat;
+						        currentLongitude.value = lon;
+						        $('currentLocationLabel').innerHTML = 'Current Location: '+lat+', '+lon;
+					        }
+					        else{					        			
+					        	$('currentLocationLabel').innerHTML = 'Current Location: User';				        	
+					        }
+					    };
+					    Device.onGapInit = function() {
+					        Device.Location.init(); 
+					        Device.Location.callback = updateLocation;
+					    };
+						Device.Location.init();
+						Device.onGapInit();
+				    }
+				    else{		
+			        	$('currentLocationLabel').innerHTML = 'Current Location: User';
+				    }
+			}
+			
+			function TextualZoomControl(){}
+			
+			function createControl(){
+			
+				TextualZoomControl.prototype = new GControl();			
+				TextualZoomControl.prototype.initialize = function(map) {
+					var container = document.createElement("div");		
+					var zoomInDiv = document.createElement("div");
+					this.setButtonStyle_(zoomInDiv);
+					container.appendChild(zoomInDiv);
+					zoomInDiv.appendChild(document.createTextNode("Zoom In"));
+					GEvent.addDomListener(zoomInDiv, "click", function() {
+						map.zoomIn();
+					});		
+					var zoomOutDiv = document.createElement("div");
+					this.setButtonStyle_(zoomOutDiv);
+					container.appendChild(zoomOutDiv);
+					zoomOutDiv.appendChild(document.createTextNode("Zoom Out"));
+					GEvent.addDomListener(zoomOutDiv, "click", function() {
+						map.zoomOut();
+					});		
+					map.getContainer().appendChild(container);
+					return container;	
+				}				
+				
+				TextualZoomControl.prototype.getDefaultPosition = function() {
+					return new GControlPosition(G_ANCHOR_TOP_LEFT, new GSize(2, 2));
+				}				
+				TextualZoomControl.prototype.setButtonStyle_ = function(button) {
+					addClassName(button,'btn');
+					button.style.width = "7em";
+					button.style.margin = "2px";
+				}			
+			}
+			
+			var currentWidth = 0;
+			function updateLayout(){
+			    if (window.innerWidth != currentWidth){
+			    	window.scrollTo(0,999999); //Gets wrong innerHeight if looking at the map, so scroll down to see the form first
+			    	var viewportInnerHeight = window.innerHeight;
+			        currentWidth = window.innerWidth;
+					$('map').style.height = (viewportInnerHeight - 34)+'px' ;
+					btn = $('searchAgainBtn');
+					if(btn.innerHTML == 'Search again'){
+						window.scrollTo(0,0);
+					}
+					else{				
+						window.location.href = '#searchDiv';
+					}
+			    }
+			}	
+			
+			function updateCurrentLocationLabel(){
+				label = $('currentLocationLabel');
+				if(label.innerHTML.indexOf('searching') > 0){
+					label.innerHTML = 'Current Location: User';
+				}
+			}
+			
+			function initialize(){
+			
+				window.location.href= '#searchDiv';
+				if (!GBrowserIsCompatible()) {					
+					$('map').style.display = 'none';
+		        	$('topMenu').style.display = 'none';
+		        	alert('Incompatible browser.');
+					return;			        
+				}							
+				
+				if ((lat != '') && (lon != '')){
+					if(isIphone()){
+						createControl();
+			        	loadMap();
+					    window.scrollTo(0,0);
+						setInterval(updateLayout, 400);
+						setTimeout(updateCurrentLocationLabel,15000);
+		        	}
+		        	else if(isBlackberry()){
+		        		$('map').style.height = null;
+		        		loadBBMap();
+		        		goLeft();
+		        		goRight();
+		        	}
+		        	else{
+		        		alert('Browser not supported');
+		        	}
+		        }
+		        else{
+		        	$('map').style.display = 'none';
+		        	$('topMenu').style.display = 'none';
+		        }
+				setCoordinates();				
+				
+			}
+			
+			
+		</script>
+	</body>
+	</apex:outputPanel>
+</html>
+</apex:page>

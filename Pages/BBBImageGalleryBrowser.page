@@ -1,0 +1,151 @@
+<apex:page showHeader="false" 
+    standardStylesheets="false" 
+    sidebar="false"
+    controller="BBBImageGalleryBrowserController">
+   
+    <apex:include pageName="ImageBrowserStyles" />
+	
+	<div class="header ImageBrowserCaptureIcon">
+		<div class="title ">
+			Visualforce Mobile Demo <br/>
+			<span class="objTitle">{!objTitle}</span>
+		</div>
+	</div>
+   
+	<!-- Script to show the image bigger -->
+	<script language="javascript">  
+   
+		function toggleImage(img){
+			
+			list = document.getElementById('imageListPanel');
+			image = document.getElementById('viewImagePanel');
+			div = document.getElementById('imgPlace');
+			
+			if((list.style.display == 'none') && (img == null) ){
+				list.style.display = 'block';
+				image.style.display = 'none';
+			} else {
+				list.style.display = 'none';
+				image.style.display = 'block';
+				div.innerHTML = '<img src="' + img + '" width="318px" />';
+				
+			}				
+		}
+	</script>
+	
+	<!-- Gallery List  --> 
+	<div id="imageListPanel">
+		
+		<a href="BBBSearchResult?searchTerm={!SearchTerm}&obj=Account&filter={!showFilter}"  class="greyBtn">back</a>
+		<br />
+		<!-- The gallery Table  -->		
+		<apex:outputPanel rendered="{!!isSiteVisit}">			
+			<table class="searchResult" align="center">
+			<apex:repeat value="{!GalleryResultList}" var="galleryResult">
+				<tr>
+					<td>					
+						<apex:repeat value="{!galleryResult.photos}"  var="photo"  rendered="{!galleryResult.haveAttachments}">
+							 <p>
+							 	<a onclick="toggleImage('{!URLFOR($Action.Attachment.Download, photo.id)}');" href="javascript:;" >  
+							 		<apex:image value="{!URLFOR($Action.Attachment.Download, photo.id)}" height="80px" width="80px" />
+							 	</a>
+							 </p>						 						
+						</apex:repeat>
+						
+						<apex:image value="{!$Resource.NoImage}" height="80px" width="80px" rendered="{!!galleryResult.haveAttachments}" />								
+					
+					</td>
+					<td>
+						<strong>{!galleryResult.Name}</strong>
+						<br />{!IF(galleryResult.ReportsTo != null,'Reports to: '+galleryResult.ReportsTo,'')}
+						<br />{!IF(galleryResult.Assistant != null,'Assistant: '+galleryResult.Assistant,'')}
+						<br />{!IF(galleryResult.Description != null,galleryResult.Description,'')}
+						
+						<br />								
+						<a href="BBBimageCapture?id={!galleryResult.ItemId}&objId={!ObjectId}&obj={!objectName}&filter={!showFilter}&st={!oldSearchTerm}" class="greyBtn">
+							Add Image
+						</a>
+					</td> 
+				</tr>
+			</apex:repeat>		
+			</table>
+		</apex:outputPanel>
+		<br />
+		
+		<apex:outputPanel rendered="{!isSiteVisit}">
+			<apex:repeat value="{!GalleryResultList}" var="sv">
+				<table class="searchResult" align="center">
+					<tr>
+						<th colspan="2">Site Visit Details</th>
+					</tr>
+					
+					<tr>
+						<td>Site Visit Name:
+						</td>
+						<td>{!sv.Name}
+						</td>
+					</tr>
+					
+					<tr>
+						<td>Location:
+						</td>
+						<td>
+						 Longitude:{!sv.Lon}<br />
+	            		 Latitude:{!sv.Lat}<br />
+	            		 <!-- 
+	            		 <a href="#" onclick="toggleMap('{!siteVisit.Longitude__c}','{!siteVisit.Latitude__c}');">Map view</a>
+	            		  -->
+						</td>
+					</tr>
+					
+					<tr>
+						<td>Notes:
+						</td>
+						<td>{!sv.Description}
+						</td>
+					</tr>	
+				</table>
+				<a href="BBBimageCapture?id={!sv.ItemId}&objId={!ObjectId}&st={!oldSearchTerm}&obj={!objectName}&filter={!showFilter}" class="greyBtn">
+					Add Image
+				</a>
+				<apex:outputPanel rendered="{!sv.photos.size > 0}">
+					<table class="searchResult" align="center">
+						<tr>
+							<th>Pictures</th>
+							<th>Name / Details</th>
+						</tr>
+						<apex:repeat value="{!sv.photos}" var="pic">
+						
+							<tr>
+								<td>
+									<a onclick="toggleImage('{!URLFOR($Action.Attachment.Download, pic.id)}');" href="javascript:;" >  
+				                        <apex:image value="{!URLFOR($Action.Attachment.Download, pic.id)}" height="80px" width="80px" />	                        
+				                    </a>
+								</td>
+								<td><b>{!pic.Name}</b>
+								</td>
+							</tr>
+						
+						</apex:repeat>
+					</table>
+				</apex:outputPanel>
+			</apex:repeat>
+			
+		</apex:outputPanel>
+		<br />
+		<a href="BBBSearchResult?searchTerm={!SearchTerm}&obj=Account&filter={!showFilter}"  class="greyBtn">back</a>
+				
+	</div>
+	
+	<!-- Show the big picture  -->
+	<div id="viewImagePanel" style="display:none">
+		<a href="javascript:;" onclick="toggleImage(null);"  class="greyBtn"  >Back</a>	
+		<br />
+		<div id="imgPlace"></div>	  
+		&nbsp;<br/>
+		<a href="javascript:;" onclick="toggleImage(null);"  class="greyBtn"  >Back</a>
+		
+	</div>
+	
+
+</apex:page>
