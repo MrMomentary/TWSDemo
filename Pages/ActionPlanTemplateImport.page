@@ -45,7 +45,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             </div>
         </div>
     </div>
-    
+    <br />
     <br/>
     
     <apex:form id="theForm" onSubmit="return fileUpload.verify();">

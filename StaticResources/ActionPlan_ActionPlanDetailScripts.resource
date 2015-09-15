@@ -14,16 +14,19 @@ ActionPlanDetailScripts = {
 				document.getElementById( 'detailPage:apForm:detailBlock:taskSection:theTable:' + i + ':commentPanel' ).style.display = "none";
         	}
         }
- 		var rowSplit = row.split( ":" );
- 		row = rowSplit[5];
+
+
+ 		var rowSplit = row.split( ":" );  
+ 		row = rowSplit[5]; 
         document.getElementById( 'detailPage:apForm:detailBlock:taskSection:theTable:' + row + ':commentPanel' ).style.display = "block";
     },
         
-    hideComments : function ( row ){
+    hideComments : function ( row ){ 
 		var rowSplit = row.split( ":" );
-		row = rowSplit[5];
+		row = rowSplit[5]; 
  		document.getElementById( 'detailPage:apForm:detailBlock:taskSection:theTable:' + row + ':commentPanel' ).style.display = "none";
     },
+
 
 	formatFields : function ( ){
 		this.formatSubject();

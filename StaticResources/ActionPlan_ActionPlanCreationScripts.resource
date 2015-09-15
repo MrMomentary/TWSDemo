@@ -17,15 +17,15 @@ ActionPlanCreationScripts = {
         }
         else{
 			document.getElementById( "editPage:apForm:editBlock:taskSection:skipDayTable" ).style.display = "none";
-        }
-    },
+        } 
+    }, 
 
 	checkDependent : function (dependent){
 		var index = ( dependent.split( ":" ) );
 		var cycle = false;
-		var visitedTasks = new Array();
+		var visitedTasks = new Array(); 
 		// check itself dependency
-        if( index[5] == document.getElementById( dependent ).value ){
+        if( index[5] == document.getElementById( dependent ).value ){ 
 			alert( AP_ITSELF_TASK_DEPENDENCY );
             document.getElementById( dependent ).value = 'None';
         }
